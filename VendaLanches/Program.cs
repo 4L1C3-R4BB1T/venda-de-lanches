@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using VendaLanches.Context;
+using VendaLanches.Models;
 using VendaLanches.Repositories;
 using VendaLanches.Repositories.Interfaces;
 
@@ -13,10 +14,15 @@ builder.Services
     .AddDbContext<AppDbContext>(options =>
         options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
 
-var app = builder.Build();
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<ILancheRepository, LancheRepository>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
-builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
-builder.Services.AddScoped<ILancheRepository, LancheRepository>();
+builder.Services.AddMemoryCache();
+builder.Services.AddSession();
+
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -26,11 +32,20 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+    name: "categoriaFiltro",
+    pattern: "Lanche/{action}/{categoria?}",
+    defaults: new { Controller = "Lanche", action = "List" });
+
+    endpoints.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 app.Run();
