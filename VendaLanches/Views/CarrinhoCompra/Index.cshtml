@@ -2,14 +2,13 @@
 
 <div class="Container">
     <div class="row checkoutForm">
-        <div class="d-flex align-items-center gap-4 py-2">
-            <img src="~/img/cart.png"  />
-            <h4> Seu carrinho de compras : </h4>
+        <div class="d-flex align-items-center gap-4 px-0 py-2">
+            <img src="~/img/cart.png" />
+            <h4>Seu carrinho de compras: </h4>
         </div>
-
         <table class="table table-bordered table-striped">
             <thead>
-                <tr>
+                <tr class="text-center">
                     <th>Quantidade</th>
                     <th>Lanche</th>
                     <th class="text-right">Preço</th>
@@ -30,7 +29,7 @@
                         <td class="text-center">
                             <a asp-controller="CarrinhoCompra" asp-action="RemoverItemDoCarrinhoCompra" 
                             asp-route-lancheId="@item.Lanche.LancheId">
-                                <img src="~/img/delete.png" width="10px" height="10px" />
+                                <img src="~/img/delete.png" width="20px" height="20px" />
                             </a>
                         </td>
                     </tr>                  
@@ -42,17 +41,14 @@
                     <td class="text-right">
                         @Model.CarrinhoCompraTotal.ToString("c")
                     </td>
+                    <td></td>
                 </tr>
             </tfoot>
         </table>
-        
-        <div class="text-right">
-            <div class="btn-group">
-                <a class="btn btn-success" asp-controller="Pedido" asp-action="Checkout">Encerrar Pedido</a>
-                &nbsp;&nbsp;&nbsp;
-                <a class="btn btn-primary" asp-controller="Lanche" asp-action="List">Continuar Comprando</a>
-            </div>
+        <div class="d-flex gap-3 p-0">
+            <a class="btn btn-success" asp-controller="Pedido" asp-action="Checkout">Encerrar Pedido</a>
+            <a class="btn btn-primary" asp-controller="Lanche" asp-action="List">Continuar Comprando</a>
         </div>
-    <br />
+        <br />
     </div>
 </div>
