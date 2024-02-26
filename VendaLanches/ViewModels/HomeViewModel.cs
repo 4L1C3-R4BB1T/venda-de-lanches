@@ -1,9 +1,8 @@
 using VendaLanches.Models;
 
-namespace VendaLanches.ViewModels
+namespace VendaLanches.ViewModels;
+
+public class HomeViewModel
 {
-    public class HomeViewModel
-    {
-        public IEnumerable<Lanche> LanchesPreferidos { get; set; }
-    }
+    public IEnumerable<Lanche> LanchesPreferidos { get; set; }
 }

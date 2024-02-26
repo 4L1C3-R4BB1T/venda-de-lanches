@@ -2,6 +2,7 @@ using VendaLanches.Models;
 using VendaLanches.Repositories.Interfaces;
 using VendaLanches.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VendaLanches.Controllers;
 
@@ -10,7 +11,7 @@ public class CarrinhoCompraController : Controller
     private readonly ILancheRepository _lancheRepository;
     private readonly CarrinhoCompra _carrinhoCompra;
 
-    public CarrinhoCompraController(ILancheRepository lancheRepository, 
+    public CarrinhoCompraController(ILancheRepository lancheRepository,
         CarrinhoCompra carrinhoCompra)
     {
         _lancheRepository = lancheRepository;
@@ -29,6 +30,7 @@ public class CarrinhoCompraController : Controller
         return View(carrinhoCompraVM);
     }
 
+    [Authorize]
     public IActionResult AdicionarItemNoCarrinhoCompra(int lancheId)
     {
         var lancheSelecionado = _lancheRepository.Lanches
@@ -40,6 +42,7 @@ public class CarrinhoCompraController : Controller
         return RedirectToAction("Index");
     }
 
+    [Authorize]
     public IActionResult RemoverItemDoCarrinhoCompra(int lancheId)
     {
         var lancheSelecionado = _lancheRepository.Lanches
