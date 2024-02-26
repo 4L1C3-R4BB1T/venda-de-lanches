@@ -1,0 +1,30 @@
+﻿@model VendaLanches.Models.Categoria
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h3>Deseja deletar esta categoria ?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.CategoriaNome)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.CategoriaNome)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+    </dl>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CategoriaId" />
+        <input type="submit" value="Deletar" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-outline-info">Retornar</a>
+    </form>
+</div>

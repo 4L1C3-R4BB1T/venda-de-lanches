@@ -36,9 +36,7 @@ public class CarrinhoCompraController : Controller
         var lancheSelecionado = _lancheRepository.Lanches
             .FirstOrDefault(p => p.LancheId == lancheId);
         if (lancheSelecionado != null)
-        {
             _carrinhoCompra.AdicionarAoCarrinho(lancheSelecionado);
-        }
         return RedirectToAction("Index");
     }
 
@@ -48,9 +46,7 @@ public class CarrinhoCompraController : Controller
         var lancheSelecionado = _lancheRepository.Lanches
             .FirstOrDefault(p => p.LancheId == lancheId);
         if (lancheSelecionado != null)
-        {
             _carrinhoCompra.RemoverDoCarrinho(lancheSelecionado);
-        }
         return RedirectToAction("Index");
     }
 }

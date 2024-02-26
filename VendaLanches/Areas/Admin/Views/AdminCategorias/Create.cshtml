@@ -1,0 +1,30 @@
+﻿@model VendaLanches.Models.Categoria
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Criar Categoria</h3>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CategoriaNome" class="control-label"></label>
+                <input asp-for="CategoriaNome" class="form-control" />
+                <span asp-validation-for="CategoriaNome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descricao" class="control-label"></label>
+                <input asp-for="Descricao" class="form-control" />
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Criar Categoria" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-info">Retornar</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -4,22 +4,19 @@ using VendaLanches.Context;
 using VendaLanches.Models;
 using VendaLanches.Repositories;
 using VendaLanches.Repositories.Interfaces;
+using VendaLanches.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var appConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseMySql(appConnection, ServerVersion.AutoDetect(appConnection));
+});
 
-builder.Services
-    .AddDbContext<AppDbContext>(options =>
-        options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
-
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.Configure<IdentityOptions>(options =>
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -27,12 +24,20 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 1;
-});
+})
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 builder.Services.AddMemoryCache();
@@ -49,7 +54,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.UseSession();
@@ -57,17 +61,21 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-#pragma warning disable ASP0014
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-    name: "categoriaFiltro",
-    pattern: "Lanche/{action}/{categoria?}",
-    defaults: new { Controller = "Lanche", action = "List" });
+app.MapControllerRoute(
+    name: "admin",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+);
 
-    endpoints.MapControllerRoute(
+app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-});
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
+
+// Add SeedUsers e SeedRoles
+using var scope = app.Services.CreateScope();
+var service = scope.ServiceProvider;
+var seedService = service.GetRequiredService<ISeedUserRoleInitial>();
+seedService.SeedRoles();
+seedService.SeedUsers();
 
 app.Run();
