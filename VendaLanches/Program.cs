@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
+using VendaLanches.Areas.Admin.Services;
 using VendaLanches.Context;
 using VendaLanches.Models;
 using VendaLanches.Repositories;
@@ -32,6 +34,7 @@ builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddTransient<ILancheRepository, LancheRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+builder.Services.AddScoped<RelatorioVendasService>();
 
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Admin", policy => policy.RequireRole("Admin"));
@@ -42,6 +45,12 @@ builder.Services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
 builder.Services.AddMemoryCache();
 builder.Services.AddSession();
+
+builder.Services.AddPaging(options =>
+{
+    options.ViewName = "Bootstrap5";
+    options.PageParameterName = "pageindex";
+});
 
 var app = builder.Build();
 

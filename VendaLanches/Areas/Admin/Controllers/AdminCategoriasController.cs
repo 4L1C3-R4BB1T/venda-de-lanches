@@ -27,8 +27,7 @@ public class AdminCategoriasController : Controller
         if (id == null)
             return NotFound();
 
-        var categoria = await _context.Categorias
-            .FirstOrDefaultAsync(m => m.CategoriaId == id);
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.CategoriaId == id);
 
         if (categoria == null)
             return NotFound();
@@ -98,8 +97,7 @@ public class AdminCategoriasController : Controller
         if (id == null)
             return NotFound();
 
-        var categoria = await _context.Categorias
-            .FirstOrDefaultAsync(m => m.CategoriaId == id);
+        var categoria = await _context.Categorias.FirstOrDefaultAsync(m => m.CategoriaId == id);
 
         if (categoria == null)
             return NotFound();
